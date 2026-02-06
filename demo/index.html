@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Price Drop Widget Demo</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self';">
+    <link rel="stylesheet" href="/assets/price-drop-widget.css">
+</head>
+<body>
+    <h1>Price Drop Widget Demo</h1>
+    <p>Testing widget with CSP headers</p>
+    
+    <div id="widget-container" 
+         data-price-drop-widget
+         data-product-name="iPhone 15 Pro"
+         data-product-price="$999.99"
+         data-product-url="http://localhost:3000/demo">
+    </div>
+    
+    <h3>Test Product Info:</h3>
+    <ul>
+        <li>Product: iPhone 15 Pro</li>
+        <li>Price: $999.99</li>
+        <li>URL: This page</li>
+    </ul>
+    
+    <script src="/assets/price-drop-widget.min.js"></script>
+</body>
+</html>

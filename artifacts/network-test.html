@@ -1,0 +1,19 @@
+﻿// Network test - save as artifacts/network-test.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network Waterfall Test</title>
+    <script src="../widget/dist/price-drop-widget.min.js"></script>
+</head>
+<body>
+    <h1>Network Waterfall Test</h1>
+    <div id="widget"></div>
+    <script>
+        new PriceDropWidget({
+            productName: "Test Product",
+            productPrice: "$99.99",
+            container: "#widget"
+        });
+    </script>
+</body>
+</html>

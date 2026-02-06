@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Drop Widget - Embed</title>
+    <style>
+        /* Basic reset for iframe */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+            background: transparent;
+        }
+        .embed-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .embed-note {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="embed-container" id="widget-container"></div>
+    <p class="embed-note">Price Drop Notifier Widget</p>
+
+    <script>
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Product data from URL or defaults
+        const productData = {
+            name: urlParams.get('name') || 'Product',
+            price: urlParams.get('price') || '$0.00',
+            url: urlParams.get('url') || window.location.href
+        };
+
+        // Determine API URL (relative for same origin)
+        const apiUrl = window.location.hostname === 'localhost' 
+            ? '/subscribe-price-drop'
+            : window.location.origin + '/subscribe-price-drop';
+
+        // Load widget script
+        function loadWidget() {
+            const script = document.createElement('script');
+            script.src = window.location.hostname === 'localhost'
+                ? 'http://localhost:3000/assets/price-drop-widget.min.js'
+                : '/assets/price-drop-widget.min.js';
+            
+            script.onload = function() {
+                if (window.PriceDropWidget) {
+                    initializeWidget();
+                }
+            };
+            
+            script.onerror = function() {
+                document.getElementById('widget-container').innerHTML = 
+                    '<p style="color: #dc2626; padding: 20px; text-align: center;">' +
+                    'Failed to load widget. Please check your connection.</p>';
+            };
+            
+            document.head.appendChild(script);
+        }
+
+        // Initialize widget
+        function initializeWidget() {
+            try {
+                const widget = new PriceDropWidget({
+                    productName: productData.name,
+                    productPrice: productData.price,
+                    productUrl: productData.url,
+                    apiUrl: apiUrl,
+                    container: '#widget-container'
+                });
+                
+                // Notify parent if in iframe
+                if (window !== window.top) {
+                    window.parent.postMessage({
+                        type: 'PRICE_DROP_WIDGET_LOADED',
+                        height: document.body.scrollHeight
+                    }, '*');
+                }
+            } catch (error) {
+                console.error('Widget initialization error:', error);
+                document.getElementById('widget-container').innerHTML = 
+                    '<p style="color: #dc2626; padding: 20px;">Error loading widget.</p>';
+            }
+        }
+
+        // Start loading
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadWidget);
+        } else {
+            loadWidget();
+        }
+
+        // Resize iframe when content changes
+        function updateIframeHeight() {
+            if (window !== window.top) {
+                const height = document.body.scrollHeight;
+                window.parent.postMessage({
+                    type: 'PRICE_DROP_WIDGET_HEIGHT',
+                    height: height
+                }, '*');
+            }
+        }
+
+        // Watch for DOM changes
+        const observer = new MutationObserver(updateIframeHeight);
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            characterData: true
+        });
+
+        // Initial height update
+        setTimeout(updateIframeHeight, 100);
+    </script>
+</body>
+</html>

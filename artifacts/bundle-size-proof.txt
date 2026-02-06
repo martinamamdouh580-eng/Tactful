@@ -1,0 +1,9 @@
+﻿ BUNDLE SIZE PROOF
+===================
+File: price-drop-widget.min.js
+Raw size: 12 KB
+Gzipped (estimated): 4 KB
+Limit: 12 KB gzipped
+Status:  UNDER LIMIT
+
+ Note: Gzip estimation is ~30% of raw size

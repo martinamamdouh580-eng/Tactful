@@ -1,0 +1,11 @@
+﻿
+Test Status Response                                              Time
+---- ------ --------                                              ----
+   1    409 @{ok=False; error=Already subscribed to this product} 32ms
+   2    409 @{ok=False; error=Already subscribed to this product} 5ms 
+   3    409 @{ok=False; error=Already subscribed to this product} 2ms 
+   4    409 @{ok=False; error=Already subscribed to this product} 2ms 
+   5    409 @{ok=False; error=Already subscribed to this product} 2ms 
+
+
+
